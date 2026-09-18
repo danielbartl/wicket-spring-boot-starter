@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.wicketstuff</groupId>
+		<artifactId>wicketstuff-core</artifactId>
+		<version>10.12.0-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>wicketstuff-spring-boot-starter-parent</artifactId>
+	<packaging>pom</packaging>
+
+	<name>WicketStuff Spring Boot Starter - Parent</name>
+	<description>
+		Parent project for Wicket Spring Boot Starter module and its example application.
+	</description>
+
+	<properties>
+		<spring-boot.version>4.1.0</spring-boot.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Keep the whole JUnit Platform/Jupiter family at the version the root pom already
+			     manages (${junit.version}). Declared before the spring-boot-dependencies import
+			     below so these win over its own (older) junit-platform-* versions, which would
+			     otherwise mix with the root-managed junit-jupiter-api/engine and break at
+			     runtime (e.g. IllegalAccessError from mismatched junit-platform-commons). -->
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.jupiter</groupId>
+				<artifactId>junit-jupiter-params</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.platform</groupId>
+				<artifactId>junit-platform-commons</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.junit.platform</groupId>
+				<artifactId>junit-platform-engine</artifactId>
+				<version>${junit.version}</version>
+			</dependency>
+
+			<!-- Same problem for logback: the root pom pins logback-classic to a newer
+			     ${logback.version} than the spring-boot-dependencies BOM's logback-core,
+			     and the two are not binary-compatible across minor versions
+			     (AbstractMethodError on PatternLayoutBase.getDefaultConverterMap()). -->
+			<dependency>
+				<groupId>ch.qos.logback</groupId>
+				<artifactId>logback-core</artifactId>
+				<version>${logback.version}</version>
+			</dependency>
+
+			<!-- Manage all org.springframework.boot artifact versions from the official BOM,
+			     rather than hardcoding ${spring-boot.version} on each individual dependency. -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<modules>
+		<module>wicketstuff-spring-boot-starter</module>
+		<module>wicketstuff-spring-boot-starter-examples</module>
+	</modules>
+</project>
