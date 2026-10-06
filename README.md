@@ -437,16 +437,19 @@ initializr:
 `mvn verify` builds the starter, runs its tests and the integration test under `src/it`. Build with
 JDK 17 to 25, for the reason given in the [Compatibility Matrix](#compatibility-matrix).
 
-Releases go to Maven Central through the Central Portal:
+Releases go to Maven Central through the Central Portal, from the Release workflow. Pushing a tag
+releases the version it names, while `main` stays on the next `-SNAPSHOT`:
 
 ```bash
-mvn versions:set -DnewVersion=0.1.0 -DgenerateBackupPoms=false
-mvn -Prelease deploy
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
-The `release` profile attaches sources and Javadoc, signs everything with GPG and uploads it, leaving
-out the examples module. It needs a `central` server entry in `~/.m2/settings.xml` holding a Central
-Portal user token.
+The workflow runs the full build, attaches sources and Javadoc, signs everything with GPG, uploads
+it (leaving out the examples module) and creates a GitHub Release. It needs the repository secrets
+`MAVEN_CENTRAL_USERNAME` and `MAVEN_CENTRAL_PASSWORD` (a Central Portal user token), and
+`GPG_PRIVATE_KEY` and `GPG_PASSPHRASE`. To review a release in the Central Portal before it goes
+public, set the repository variable `CENTRAL_AUTO_PUBLISH` to `false`.
 
 ---
 

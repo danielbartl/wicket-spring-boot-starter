@@ -65,6 +65,9 @@
 		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
 		<maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
 		<central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
+		<!-- false: upload and validate only, then publish by hand in the Central Portal -->
+		<central.autoPublish>true</central.autoPublish>
+		<central.waitUntil>published</central.waitUntil>
 	</properties>
 
 	<dependencyManagement>
@@ -208,8 +211,9 @@
 
 	<profiles>
 		<!-- Publishes to Maven Central: mvn -Prelease deploy
-		     Needs a "central" server entry holding a Central Portal user token in
-		     ~/.m2/settings.xml, and a GPG key to sign with. -->
+		     Normally run by the Release workflow when a v* tag is pushed. Run by hand, it needs a
+		     "central" server entry holding a Central Portal user token in ~/.m2/settings.xml, and a
+		     GPG key to sign with. -->
 		<profile>
 			<id>release</id>
 			<build>
@@ -260,8 +264,8 @@
 							<excludeArtifacts>
 								<artifactId>wicket-spring-boot-starter-examples</artifactId>
 							</excludeArtifacts>
-							<autoPublish>true</autoPublish>
-							<waitUntil>published</waitUntil>
+							<autoPublish>${central.autoPublish}</autoPublish>
+							<waitUntil>${central.waitUntil}</waitUntil>
 						</configuration>
 					</plugin>
 				</plugins>
