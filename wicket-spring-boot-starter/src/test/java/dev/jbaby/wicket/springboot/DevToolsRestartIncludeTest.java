@@ -59,7 +59,7 @@ class DevToolsRestartIncludeTest {
 		assertThat(otherJars)
 				.allSatisfy(url -> assertThat(matchesAny(patterns, url)).as(url).isFalse());
 		assertThat(matchesAny(patterns, url(Path.of("/repo/dev/jbaby/wicket-spring-boot-starter/"
-				+ "1.0.0/wicket-spring-boot-starter-1.0.0.jar"))))
+				+ "0.1.0/wicket-spring-boot-starter-0.1.0.jar"))))
 				.as("the starter itself").isTrue();
 	}
 
