@@ -4,47 +4,74 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.wicketstuff</groupId>
-		<artifactId>wicketstuff-core</artifactId>
-		<version>10.12.0-SNAPSHOT</version>
-	</parent>
-
-	<artifactId>wicketstuff-spring-boot-starter-parent</artifactId>
+	<groupId>dev.jbaby</groupId>
+	<artifactId>wicket-spring-boot-starter-parent</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
-	<name>WicketStuff Spring Boot Starter - Parent</name>
+	<name>Wicket Spring Boot Starter - Parent</name>
 	<description>
-		Parent project for Wicket Spring Boot Starter module and its example application.
+		Parent project for the Wicket Spring Boot Starter and its example application.
 	</description>
+	<url>https://github.com/danielbartl/wicket-spring-boot-starter</url>
+	<inceptionYear>2026</inceptionYear>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>danielbartl</id>
+			<name>Daniel Bartl</name>
+			<url>https://github.com/danielbartl</url>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/danielbartl/wicket-spring-boot-starter.git</connection>
+		<developerConnection>scm:git:git@github.com:danielbartl/wicket-spring-boot-starter.git</developerConnection>
+		<url>https://github.com/danielbartl/wicket-spring-boot-starter</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/danielbartl/wicket-spring-boot-starter/issues</url>
+	</issueManagement>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.compiler.release>17</maven.compiler.release>
+
 		<spring-boot.version>4.1.1</spring-boot.version>
+		<wicket.version>10.11.0</wicket.version>
 
-		<!-- wicketstuff-core pins these libraries for its own modules, and Maven lets those inherited
-		     pins win over the spring-boot-dependencies BOM imported below. Left alone, the starter
-		     would be built and tested against versions no Spring Boot application ever runs with
-		     (and, worse, against a mix of them, e.g. jackson-databind from one minor line with
-		     jackson-core from another). Overriding the properties here puts every module under this
-		     parent back on exactly what Spring Boot ${spring-boot.version} ships.
-
-		     Keep these equal to the spring-boot-dependencies property named after each one.
-		     BuildAlignedWithSpringBootTest fails the build as soon as they drift apart, e.g. after
-		     Spring Boot is bumped or a dependency update PR touches one of them. -->
-		<spring.version>7.0.9</spring.version>                 <!-- spring-framework.version -->
-		<jackson.version>3.1.5</jackson.version>               <!-- jackson-bom.version -->
-		<jackson2.version>2.21.5</jackson2.version>            <!-- jackson-2-bom.version -->
-		<slf4j.version>2.0.18</slf4j.version>                  <!-- slf4j.version -->
-		<logback.version>1.5.38</logback.version>              <!-- logback.version -->
-		<log4j.version>2.25.5</log4j.version>                  <!-- log4j2.version -->
-		<commons-logging.version>1.3.6</commons-logging.version> <!-- commons-logging.version -->
-		<junit.version>6.0.3</junit.version>                   <!-- junit-jupiter.version -->
+		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
+		<maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
+		<maven-deploy-plugin.version>3.2.0</maven-deploy-plugin.version>
+		<maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
+		<maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
+		<maven-install-plugin.version>3.2.0</maven-install-plugin.version>
+		<maven-invoker-plugin.version>3.10.1</maven-invoker-plugin.version>
+		<maven-jar-plugin.version>3.5.1</maven-jar-plugin.version>
+		<maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
+		<maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
+		<maven-source-plugin.version>3.4.0</maven-source-plugin.version>
+		<maven-surefire-plugin.version>3.6.0</maven-surefire-plugin.version>
+		<central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- Manage all org.springframework.boot artifact versions from the official BOM,
-			     rather than hardcoding ${spring-boot.version} on each individual dependency. -->
+			<!-- Manage all org.springframework.boot artifact versions, and those of the libraries
+			     Spring Boot depends on, from the official BOM. The starter is then built and tested
+			     against exactly what a Spring Boot ${spring-boot.version} application runs with. -->
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -52,11 +79,193 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+
+			<!-- Wicket publishes no BOM, so its artifacts are managed one by one. -->
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-core</artifactId>
+				<version>${wicket.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-spring</artifactId>
+				<version>${wicket.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.wicket</groupId>
+				<artifactId>wicket-tester</artifactId>
+				<version>${wicket.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>${maven-clean-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>${maven-deploy-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-enforcer-plugin</artifactId>
+					<version>${maven-enforcer-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>${maven-gpg-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>${maven-install-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-invoker-plugin</artifactId>
+					<version>${maven-invoker-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven-jar-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>${maven-resources-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>${maven-source-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-maven-plugin</artifactId>
+					<version>${spring-boot.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.central</groupId>
+					<artifactId>central-publishing-maven-plugin</artifactId>
+					<version>${central-publishing-maven-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>enforce-build-environment</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<configuration>
+							<rules>
+								<requireMavenVersion>
+									<version>[3.9,)</version>
+								</requireMavenVersion>
+								<requireJavaVersion>
+									<version>[17,)</version>
+								</requireJavaVersion>
+							</rules>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
 	<modules>
-		<module>wicketstuff-spring-boot-starter</module>
-		<module>wicketstuff-spring-boot-starter-examples</module>
+		<module>wicket-spring-boot-starter</module>
+		<module>wicket-spring-boot-starter-examples</module>
 	</modules>
+
+	<profiles>
+		<!-- Publishes to Maven Central: mvn -Prelease deploy
+		     Needs a "central" server entry holding a Central Portal user token in
+		     ~/.m2/settings.xml, and a GPG key to sign with. -->
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-javadoc-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>attach-javadocs</id>
+								<goals>
+									<goal>jar</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.central</groupId>
+						<artifactId>central-publishing-maven-plugin</artifactId>
+						<extensions>true</extensions>
+						<configuration>
+							<publishingServerId>central</publishingServerId>
+							<excludeArtifacts>
+								<artifactId>wicket-spring-boot-starter-examples</artifactId>
+							</excludeArtifacts>
+							<autoPublish>true</autoPublish>
+							<waitUntil>published</waitUntil>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
