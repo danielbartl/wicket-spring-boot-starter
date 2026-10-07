@@ -440,10 +440,17 @@ JDK 17 to 25, for the reason given in the [Compatibility Matrix](#compatibility-
 Releases go to Maven Central through the Central Portal, from the Release workflow. Pushing a tag
 releases the version it names, while `main` stays on the next `-SNAPSHOT`:
 
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
+1. Update the version in the README's dependency snippet, compatibility matrix and Initializr
+   entry, and in the project page (`docs/index.html`), then commit.
+2. Tag and push:
+   ```bash
+   git tag vX.Y.Z
+   git push origin vX.Y.Z
+   ```
+3. Once the release is on Maven Central, move `main` to the next development version:
+   ```bash
+   mvn versions:set -DnewVersion=X.Y+1.0-SNAPSHOT -DgenerateBackupPoms=false
+   ```
 
 The workflow runs the full build, attaches sources and Javadoc, signs everything with GPG, uploads
 it (leaving out the examples module) and creates a GitHub Release. It needs the repository secrets
