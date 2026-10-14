@@ -11,7 +11,7 @@
 
 	<name>Wicket Spring Boot Starter - Parent</name>
 	<description>
-		Parent project for the Wicket Spring Boot Starter and its example application.
+		Parent project for the Wicket Spring Boot Starter, its test starter and its example application.
 	</description>
 	<url>https://github.com/danielbartl/wicket-spring-boot-starter</url>
 	<inceptionYear>2026</inceptionYear>
@@ -206,6 +206,7 @@
 
 	<modules>
 		<module>wicket-spring-boot-starter</module>
+		<module>wicket-spring-boot-starter-test</module>
 		<module>wicket-spring-boot-starter-examples</module>
 	</modules>
 

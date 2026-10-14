@@ -38,6 +38,14 @@
 			<scope>test</scope>
 		</dependency>
 
+		<!-- The test starter: WicketTester and @WicketTest, as an application adds them -->
+		<dependency>
+			<groupId>dev.jbaby</groupId>
+			<artifactId>wicket-spring-boot-starter-test</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- TestRestTemplate: since Spring Boot 4, this is no longer pulled in transitively
 		     by spring-boot-starter-test and must be declared explicitly. -->
 		<dependency>

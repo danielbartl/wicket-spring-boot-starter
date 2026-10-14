@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>dev.jbaby</groupId>
+		<artifactId>wicket-spring-boot-starter-parent</artifactId>
+		<version>0.2.0-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+
+	<artifactId>wicket-spring-boot-starter-test</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Wicket Spring Boot Starter - Test</name>
+	<description>
+		Test support for the Wicket Spring Boot Starter: WicketTester at the starter's Wicket version,
+		Spring Boot's test starter, and @WicketTest, which hands every test a WicketTester running a
+		fresh instance of the application's own Wicket application with Spring injection.
+	</description>
+
+	<!-- Applications add this module in test scope, so everything below is compile scope here: Maven
+	     only passes compile-scoped dependencies on. The same split as Spring Boot's own
+	     spring-boot-starter-<technology>-test starters. -->
+	<dependencies>
+		<dependency>
+			<groupId>dev.jbaby</groupId>
+			<artifactId>wicket-spring-boot-starter</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+		<!-- Version from the parent's dependencyManagement: always the Wicket the starter brings -->
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-tester</artifactId>
+		</dependency>
+	</dependencies>
+</project>

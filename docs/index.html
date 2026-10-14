@@ -770,6 +770,35 @@ wicket.filter-order=0</code></pre>
 
 				<div class="card guide">
 					<div>
+						<h3>Test pages with WicketTester</h3>
+						<p>
+							From 0.2.0 on, add <code>wicket-spring-boot-starter-test</code> in test scope, at the
+							starter's version. It brings <code>WicketTester</code> at the matching Wicket version and
+							Spring Boot's test starter.
+						</p>
+						<p>
+							<code>@WicketTest</code> starts your application without a servlet container and hands every
+							test a tester running a new instance of your <code>WebApplication</code>, with
+							<code>@SpringBean</code> injection, destroyed when the test ends.
+						</p>
+					</div>
+					<div class="code">
+						<div class="code-head"><span class="dots"><i></i><i></i><i></i></span><span class="file">HomePageTest.java</span><button class="copy" type="button">Copy</button></div>
+<pre><code data-lang="java">@WicketTest
+class HomePageTest {
+
+    @Test
+    void greetsTheVisitor(WicketTester tester) {
+        tester.startPage(HomePage.class);
+
+        tester.assertLabel("message", "Hello from Spring, Wicket!");
+    }
+}</code></pre>
+					</div>
+				</div>
+
+				<div class="card guide">
+					<div>
 						<h3>Test with a real server</h3>
 						<p>
 							Wicket keys its application registry by filter name, and Spring caches test contexts

@@ -5,10 +5,10 @@ documented behaviour.
 
 ## Running it
 
-From the repository root, install the starter first, then run the example:
+From the repository root, install the starter and the test starter first, then run the example:
 
 ```bash
-mvn -pl wicket-spring-boot-starter -am install -DskipTests
+mvn -pl wicket-spring-boot-starter-test -am install -DskipTests
 mvn -f wicket-spring-boot-starter-examples spring-boot:run
 ```
 
@@ -33,6 +33,7 @@ every build rather than drifting out of date as untested sample code:
 | That `@SpringBean` already works inside your application's `init()` | `SpringBeanInjectionDuringInitTest` |
 | REST controllers living alongside Wicket pages | `WicketAndSpringMvcCoexistenceTest` |
 | `wicket.*` properties actually reaching the filter | `WicketPropertiesBindingTest` |
+| Testing a page with `WicketTester`, without a servlet container | `WicketTesterQuickstartTest` (with the test starter's `@WicketTest`) |
 | That the starter alone is enough to boot a web application | `StarterSelfSufficiencyTest` |
 
 ## A note on the dependencies
@@ -40,7 +41,8 @@ every build rather than drifting out of date as untested sample code:
 This module depends on **nothing but the starter** at compile scope, and an enforcer rule in its
 `pom.xml` keeps it that way. That is what makes `StarterSelfSufficiencyTest` meaningful: the
 embedded servlet container it boots can only have come from the starter. If you need another
-dependency here, it almost certainly belongs in the starter instead.
+dependency here, it almost certainly belongs in the starter instead. In test scope it also has the
+test starter, `wicket-spring-boot-starter-test`, as an application would.
 
 Note also that each test which starts a real servlet container sets its own `wicket.filter-name`.
 Wicket keys its application registry by that name and Spring caches test contexts, so tests would

@@ -50,6 +50,7 @@ philosophies, and neither is a replacement for the other.
 - **IDE Auto-Completion Support**: Ships with built-in configuration metadata, enabling auto-completion and documentation tooltips for Wicket properties in popular IDEs (IntelliJ, Eclipse, VS Code).
 - **Spring MVC Coexistence**: Requests Wicket does not handle fall through to Spring MVC, so `@RestController` endpoints work next to Wicket pages.
 - **DevTools Support**: Works with `spring-boot-devtools` out of the box: automatic restarts, the back button and restored pages keep working with `@SpringBean` fields.
+- **Test Starter**: `wicket-spring-boot-starter-test` brings `WicketTester` at the matching Wicket version, and `@WicketTest` hands each test a tester running your application with `@SpringBean` injection.
 
 ---
 
@@ -141,6 +142,23 @@ for the latest released version):
     <version>0.1.0</version>
 </dependency>
 ```
+
+For tests, add the test starter next to it, in test scope and at the same version as the starter
+(it exists from 0.2.0 on). It brings Wicket's `WicketTester` at the same Wicket version, Spring
+Boot's test starter, and [`@WicketTest`](#testing-pages-with-wickettester):
+
+```xml
+<dependency>
+    <groupId>dev.jbaby</groupId>
+    <artifactId>wicket-spring-boot-starter-test</artifactId>
+    <version>0.2.0</version>
+    <scope>test</scope>
+</dependency>
+```
+
+`wicket-tester` has to come from a dependency of its own: it brings JUnit and AssertJ, which don't
+belong in your application, and Maven never passes test-scoped dependencies on to the projects using
+a library.
 
 ---
 
@@ -359,6 +377,34 @@ profile, setting the environment variable `WICKET_CONFIGURATION=DEPLOYMENT` does
 
 ## Testing
 
+### Testing pages with WicketTester
+
+With the [test starter](#dependency-configuration) on the test classpath, annotate the test class
+with `@WicketTest` and declare a `WicketTester` parameter:
+
+```java
+@WicketTest
+class HomePageTest {
+
+    @Test
+    void greetsTheVisitor(WicketTester tester) {
+        tester.startPage(HomePage.class);
+
+        tester.assertLabel("message", "Hello from Spring, Wicket!");
+    }
+}
+```
+
+`@WicketTest` starts your Spring Boot application like `@SpringBootTest`, without a servlet
+container. Every test gets a new `WicketTester` running a new instance of your `WebApplication`,
+created by Spring, so `@SpringBean` fields in pages are injected exactly as in the running
+application. `@BeforeEach`, `@Test` and `@AfterEach` methods of one test share that tester, and it is
+destroyed when the test ends. Use `@WicketTest` instead of `@SpringBootTest`; its `properties` and
+`classes` work the same. To keep a `@SpringBootTest` with other settings, add
+`@ExtendWith(WicketTesterExtension.class)` to it instead.
+
+### Tests that start a servlet container
+
 Wicket keys its application registry by the filter name, and Spring keeps test contexts cached for
 the lifetime of the JVM. Two tests that each start a real servlet container therefore collide on the
 default filter name, failing with `Application with name 'wicket-filter' already exists`.
@@ -420,6 +466,28 @@ initializr:
   drops or adds a Spring Boot line, split the range into several mappings.
 - `version` must be a release available on Maven Central, never a snapshot.
 
+The Initializr's `application.yml` can't add a second dependency for one entry, so the test starter
+comes from a small build customizer, the same way start.spring.io adds
+`mybatis-spring-boot-starter-test` for MyBatis. It adds the test starter at the version the `wicket`
+entry resolved to:
+
+```java
+class WicketTestBuildCustomizer implements BuildCustomizer<Build> {
+
+    @Override
+    public void customize(Build build) {
+        Dependency wicket = build.dependencies().get("wicket");
+        build.dependencies().add("wicket-test",
+                Dependency.withCoordinates(wicket.getGroupId(), wicket.getArtifactId() + "-test")
+                    .version(wicket.getVersion())
+                    .scope(DependencyScope.TEST_COMPILE));
+    }
+}
+```
+
+Register it as a bean with `@ConditionalOnRequestedDependency("wicket")` in a
+`@ProjectGenerationConfiguration`.
+
 ---
 
 ## Further Reading
@@ -440,8 +508,9 @@ JDK 17 to 25, for the reason given in the [Compatibility Matrix](#compatibility-
 Releases go to Maven Central through the Central Portal, from the Release workflow. Pushing a tag
 releases the version it names, while `main` stays on the next `-SNAPSHOT`:
 
-1. Update the version in the README's dependency snippet, compatibility matrix and Initializr
-   entry, and in the project page (`docs/index.html`), then commit.
+1. Update the version in the README's dependency snippets (the starter and the test starter),
+   compatibility matrix and Initializr entry, and in the project page (`docs/index.html`), then
+   commit.
 2. Tag and push:
    ```bash
    git tag vX.Y.Z
