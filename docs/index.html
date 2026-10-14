@@ -226,6 +226,7 @@
 		}
 		.tab[aria-selected="true"] { color: #fff; background: #22262d; border-color: #30353d; }
 		.tab-panel[hidden] { display: none; }
+		@media (max-width: 480px) { .code[data-tabs] .code-head .dots { display: none; } }
 
 		.tok-k { color: #ff8f5c; }
 		.tok-t { color: #8fd16a; }
@@ -245,6 +246,7 @@
 		h2 { font-size: clamp(1.8rem, 3.6vw, 2.5rem); line-height: 1.15; letter-spacing: -.025em; margin: 10px 0 14px; font-weight: 720; }
 		h3 { font-size: 1.2rem; letter-spacing: -.01em; margin: 0 0 8px; font-weight: 680; }
 		.section-head p { color: var(--text-soft); font-size: 1.08rem; margin: 0; }
+		.section-head p + p { margin-top: 12px; }
 		p { margin: 0 0 14px; }
 		.muted { color: var(--text-soft); }
 
@@ -316,6 +318,7 @@
 		.guide p { color: var(--text-soft); }
 		.guide p:last-child { margin-bottom: 0; }
 		.guide .code { box-shadow: none; }
+		.guide .codes { display: grid; gap: 14px; min-width: 0; }
 
 		@media (max-width: 900px) { .guide { grid-template-columns: 1fr; gap: 18px; padding: 22px; } }
 
@@ -782,8 +785,33 @@ wicket.filter-order=0</code></pre>
 							<code>@SpringBean</code> injection, destroyed when the test ends.
 						</p>
 					</div>
-					<div class="code">
-						<div class="code-head"><span class="dots"><i></i><i></i><i></i></span><span class="file">HomePageTest.java</span><button class="copy" type="button">Copy</button></div>
+					<div class="codes">
+						<div class="code" data-tabs>
+							<div class="code-head">
+								<span class="dots"><i></i><i></i><i></i></span>
+								<div class="tabs" role="tablist" aria-label="Build tool">
+									<button class="tab" role="tab" aria-selected="true" aria-controls="test-dep-maven" id="tab-test-maven">pom.xml</button>
+									<button class="tab" role="tab" aria-selected="false" aria-controls="test-dep-gradle" id="tab-test-gradle" tabindex="-1">build.gradle</button>
+								</div>
+								<span class="file"></span>
+								<button class="copy" type="button">Copy</button>
+							</div>
+							<div class="tab-panel" id="test-dep-maven" role="tabpanel" aria-labelledby="tab-test-maven">
+<pre><code data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
+  &lt;artifactId&gt;wicket-spring-boot-starter-test&lt;/artifactId&gt;
+  &lt;version&gt;0.2.0&lt;/version&gt;
+  &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+							</div>
+							<div class="tab-panel" id="test-dep-gradle" role="tabpanel" aria-labelledby="tab-test-gradle" hidden>
+<pre><code data-lang="gradle">dependencies {
+  testImplementation 'dev.jbaby:wicket-spring-boot-starter-test:0.2.0'
+}</code></pre>
+							</div>
+						</div>
+						<div class="code">
+							<div class="code-head"><span class="dots"><i></i><i></i><i></i></span><span class="file">HomePageTest.java</span><button class="copy" type="button">Copy</button></div>
 <pre><code data-lang="java">@WicketTest
 class HomePageTest {
 
@@ -794,6 +822,7 @@ class HomePageTest {
         tester.assertLabel("message", "Hello from Spring, Wicket!");
     }
 }</code></pre>
+						</div>
 					</div>
 				</div>
 
@@ -979,11 +1008,15 @@ server.tomcat.basedir=target/tomcat</code></pre>
 		<div class="wrap">
 			<div class="section-head">
 				<div class="kicker">Spring Initializr</div>
-				<h2>A Wicket checkbox in your own Initializr.</h2>
+				<h2>A Wicket checkbox in Spring Initializr.</h2>
 				<p>
-					The starter is not listed on start.spring.io, but Spring Initializr is open source. An
-					instance of your own, for a team or a training, offers Wicket next to everything
-					start.spring.io has.
+					The starter is not listed on start.spring.io. <a href="https://start.fullstack4j.dev">start.fullstack4j.dev</a>
+					is a fork of it that offers Wicket next to everything start.spring.io has, and adds the
+					test starter to every Wicket project.
+				</p>
+				<p>
+					Spring Initializr is open source, so an instance of your own, for a team or a training,
+					can offer the starter too:
 				</p>
 			</div>
 			<div class="setup">
@@ -995,7 +1028,7 @@ server.tomcat.basedir=target/tomcat</code></pre>
 				<div class="card">
 					<span class="when">Per release</span>
 					<h3>Add the Wicket entry</h3>
-					<p>The <a href="https://github.com/danielbartl/wicket-spring-boot-starter#the-initializr-entry">entry in the README</a> maps each Spring Boot line to the starter release tested with it.</p>
+					<p>The <a href="https://github.com/danielbartl/wicket-spring-boot-starter#the-initializr-entry">entry in the README</a> maps each Spring Boot line to the starter release tested with it. A small build customizer adds the test starter to Wicket projects.</p>
 				</div>
 				<div class="card">
 					<span class="when">Every project</span>

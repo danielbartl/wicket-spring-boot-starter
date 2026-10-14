@@ -428,10 +428,14 @@ filter is never initialised.
 
 ## Using it from your own Spring Initializr
 
-The starter is not listed on start.spring.io, but [Spring Initializr](https://github.com/spring-io/initializr)
-is open source, and an instance of your own (for a team, or for a training) can offer it next to
-everything start.spring.io has. IntelliJ IDEA and the Spring Boot CLI both accept a custom Initializr
-URL, so generating a Wicket project then works exactly like generating any other.
+The starter is not listed on start.spring.io. [start.fullstack4j.dev](https://start.fullstack4j.dev)
+is a fork of it that offers Apache Wicket next to everything start.spring.io has, and adds the test
+starter to every Wicket project.
+
+[Spring Initializr](https://github.com/spring-io/initializr) is open source, so an instance of your
+own (for a team, or for a training) can offer the starter too. IntelliJ IDEA and the Spring Boot CLI
+both accept a custom Initializr URL, so generating a Wicket project then works exactly like generating
+any other.
 
 ### The Initializr entry
 
@@ -487,7 +491,8 @@ class WicketTestBuildCustomizer implements BuildCustomizer<Build> {
 ```
 
 Register it as a bean with `@ConditionalOnRequestedDependency("wicket")` in a
-`@ProjectGenerationConfiguration`.
+`@ProjectGenerationConfiguration`. start.fullstack4j.dev does exactly that, in
+[`WicketTestBuildCustomizer`](https://github.com/danielbartl/fullstack4j-start/blob/main/start-site/src/main/java/io/spring/start/site/extension/dependency/wicket/WicketTestBuildCustomizer.java).
 
 ---
 
