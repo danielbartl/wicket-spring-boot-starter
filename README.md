@@ -139,7 +139,7 @@ for the latest released version):
 <dependency>
     <groupId>dev.jbaby</groupId>
     <artifactId>wicket-spring-boot-starter</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 
@@ -168,7 +168,8 @@ Ensure you match the correct starter version with your Spring Boot and Java envi
 
 | Starter Version | Apache Wicket | Spring Boot | Spring Framework | Java |
 | :--- | :--- | :--- | :--- | :--- |
-| **`0.1.x`** (Current) | `10.11.x` | `4.0.x`, `4.1.x` | `7.0.x` | 17 to 25 |
+| **`0.2.x`** (Current) | `10.11.x` | `4.0.x`, `4.1.x` | `7.0.x` | 17 to 25 |
+| `0.1.x` | `10.11.x` | `4.0.x`, `4.1.x` | `7.0.x` | 17 to 25 |
 
 Java 26 and later are not supported yet: Wicket 10.11 fails to create the `@SpringBean` proxies there,
 because Java 26 no longer lets ByteBuddy define classes through `Unsafe`. This is fixed in Wicket
@@ -451,7 +452,7 @@ initializr:
           compatibilityRange: "[4.0.0,4.2.0-M1)"
           mappings:
             - compatibilityRange: "[4.0.0,4.2.0-M1)"
-              version: 0.1.0
+              version: 0.2.0
           links:
             - rel: reference
               href: https://github.com/danielbartl/wicket-spring-boot-starter
