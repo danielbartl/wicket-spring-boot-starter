@@ -37,7 +37,11 @@ Pick that one if you want those batteries included. Pick this one if you would r
 smallest thing that works and add what you need yourself. They solve the same problem with opposite
 philosophies, and neither is a replacement for the other.
 
+If you want Wicket as part of a whole stack instead, the [fullstack4j Spring Boot Starter][fullstack4j]
+builds on this one and adds Wicket Oat, Spring Modulith and MongoDB, at versions that work together.
+
 [giffing]: https://github.com/MarcGiffing/wicket-spring-boot
+[fullstack4j]: https://github.com/danielbartl/fullstack4j-spring-boot-starter
 
 ---
 
