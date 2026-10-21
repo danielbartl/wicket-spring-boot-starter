@@ -53,15 +53,15 @@ class DefaultWebApplicationTest {
 	}
 
 	@Test
-	void linksItsStylesheetAndLogoAsPackageResourcesRatherThanFromTheApplicationRoot() {
+	void linksItsStylesheetAndMarkAsPackageResourcesRatherThanFromTheApplicationRoot() {
 		tester.startPage(DefaultHomePage.class);
 
 		String markup = tester.getLastResponseAsString();
 		assertThat(markup)
 				.contains("wicket/resource/dev.jbaby.wicket.springboot.DefaultHomePage/style")
-				.contains("wicket/resource/dev.jbaby.wicket.springboot.DefaultHomePage/logo")
+				.contains("wicket/resource/dev.jbaby.wicket.springboot.DefaultHomePage/mark")
 				.doesNotContain("href=\"style.css\"")
-				.doesNotContain("src=\"logo.png\"");
+				.doesNotContain("src=\"mark.svg\"");
 	}
 
 	@Test
@@ -72,8 +72,8 @@ class DefaultWebApplicationTest {
 	}
 
 	@Test
-	void servesTheLogoAsAPackageResource() {
-		tester.startResourceReference(new PackageResourceReference(DefaultHomePage.class, "logo.png"));
+	void servesTheMarkAsAPackageResource() {
+		tester.startResourceReference(new PackageResourceReference(DefaultHomePage.class, "mark.svg"));
 
 		assertThat(tester.getLastResponse().getStatus()).isEqualTo(200);
 	}
