@@ -20,8 +20,8 @@
 	<meta name="description" content="Run Apache Wicket on Spring Boot with a single dependency: auto-configured filter, @SpringBean injection, externalised settings and DevTools support.">
 	<meta property="og:title" content="Wicket Spring Boot Starter">
 	<meta property="og:description" content="Apache Wicket on Spring Boot, with a single dependency.">
-	<meta property="og:image" content="wicket-logo.png">
-	<link rel="icon" type="image/png" href="wicket-logo.png">
+	<meta property="og:image" content="https://danielbartl.github.io/wicket-spring-boot-starter/mark.png">
+	<link rel="icon" type="image/svg+xml" href="mark.svg">
 	<style>
 		:root {
 			--bg: #fbfaf8;
@@ -131,7 +131,10 @@
 		}
 		.nav .wrap { display: flex; align-items: center; gap: 24px; height: 64px; }
 		.brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 650; letter-spacing: -.01em; white-space: nowrap; }
-		.brand img { width: 30px; height: 30px; }
+		.brand svg { width: 30px; height: 30px; }
+		.brand .mark-a { fill: var(--wicket); }
+		.brand .mark-b { fill: #f08a24; }
+		.brand .mark-base { fill: var(--spring); }
 		.nav-links { display: flex; gap: 22px; margin-left: auto; align-items: center; }
 		.nav-links a { color: var(--text-soft); text-decoration: none; font-size: .94rem; }
 		.nav-links a:hover { color: var(--text); }
@@ -421,7 +424,7 @@
 
 <header class="nav">
 	<div class="wrap">
-		<a class="brand" href="#top"><img src="wicket-logo.png" alt="" width="30" height="30">Wicket Spring Boot Starter</a>
+		<a class="brand" href="#top"><svg viewBox="0 0 32 32" aria-hidden="true"><rect class="mark-a" x="4" y="5" width="11" height="11" rx="2.5"/><rect class="mark-b" x="17" y="5" width="11" height="11" rx="2.5"/><rect class="mark-base" x="4" y="19" width="24" height="8" rx="2.5"/></svg>Wicket Spring Boot Starter</a>
 		<nav class="nav-links" aria-label="Sections">
 			<a href="#get-started">Get started</a>
 			<a href="#features">Features</a>
