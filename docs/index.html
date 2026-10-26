@@ -1023,6 +1023,13 @@ server.tomcat.basedir=target/tomcat</code></pre>
 					is a fork of it that offers Wicket next to everything start.spring.io has, and adds the
 					test starter to every Wicket project.
 				</p>
+				<div class="code" style="margin: 18px 0 22px">
+					<div class="code-head"><span class="dots"><i></i><i></i><i></i></span><span class="file">Terminal</span><button class="copy" type="button">Copy</button></div>
+<pre><code data-lang="bash">curl https://start.fullstack4j.dev/starter.zip -o shop.zip \
+     -d dependencies=wicket -d javaVersion=25 \
+     -d groupId=com.acme -d artifactId=shop -d name=shop -d packageName=com.acme.shop
+unzip shop.zip</code></pre>
+				</div>
 				<p>
 					Spring Initializr is open source, so an instance of your own, for a team or a training,
 					can offer the starter too:

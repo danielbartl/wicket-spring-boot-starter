@@ -470,7 +470,14 @@ filter is never initialised.
 
 The starter is not listed on start.spring.io. [start.fullstack4j.dev](https://start.fullstack4j.dev)
 is a fork of it that offers Apache Wicket next to everything start.spring.io has, and adds the test
-starter to every Wicket project.
+starter to every Wicket project:
+
+```bash
+curl https://start.fullstack4j.dev/starter.zip -o shop.zip \
+     -d dependencies=wicket -d javaVersion=25 \
+     -d groupId=com.acme -d artifactId=shop -d name=shop -d packageName=com.acme.shop
+unzip shop.zip
+```
 
 [Spring Initializr](https://github.com/spring-io/initializr) is open source, so an instance of your
 own (for a team, or for a training) can offer the starter too. IntelliJ IDEA and the Spring Boot CLI
