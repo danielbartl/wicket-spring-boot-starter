@@ -27,11 +27,14 @@ import org.springframework.core.annotation.AliasFor;
 /**
  * Starts the whole Spring Boot application, like {@link SpringBootTest}, and hands every test a
  * {@link org.apache.wicket.util.tester.WicketTester WicketTester} running the application's own Wicket
- * application, with Spring injection into pages and components.
+ * application, with Spring injection into pages and components, and a
+ * {@link dev.jbaby.wicket.testkit.WicketTestkit WicketTestkit} for that tester.
  * <p>
- * Declare a {@code WicketTester} parameter on a {@code @Test}, {@code @BeforeEach} or
- * {@code @AfterEach} method. Within one test, all of them receive the same tester; every test gets a
- * new one, destroyed when the test ends:
+ * Declare a {@code WicketTester} or a {@code WicketTestkit} parameter, or both, on a {@code @Test},
+ * {@code @BeforeEach} or {@code @AfterEach} method. Within one test, all of them receive the same
+ * tester and testkit; every test gets new ones, and the tester is destroyed when the test ends. The
+ * testkit finds components by type, {@code wicket:id}, label and the row of a list, instead of by
+ * paths such as {@code "list:orders:0:customer"}:
  * </p>
  * <pre class="code">
  * &#064;WicketTest
@@ -40,12 +43,13 @@ import org.springframework.core.annotation.AliasFor;
  *     &#064;Autowired Orders orders;
  *
  *     &#064;Test
- *     void listsOpenOrders(WicketTester tester) {
- *         orders.place("ACME", ONE_WIDGET);
- *
+ *     void shipsAnOrder(WicketTester tester, WicketTestkit kit) {
+ *         Order order = orders.place("ACME", ONE_WIDGET);
  *         tester.startPage(OrdersPage.class);
  *
- *         tester.assertLabel("list:orders:0:customer", "ACME");
+ *         kit.click(locate(AjaxLink.class).withId("ship").inRowOf(order));
+ *
+ *         kit.assertLabel(locate(Label.class).withId("status").inRowOf(order), "shipped");
  *     }
  * }
  * </pre>

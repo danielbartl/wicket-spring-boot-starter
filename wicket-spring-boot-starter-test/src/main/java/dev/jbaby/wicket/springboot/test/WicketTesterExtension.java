@@ -13,6 +13,7 @@
  */
 package dev.jbaby.wicket.springboot.test;
 
+import dev.jbaby.wicket.testkit.WicketTestkit;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.protocol.http.mock.MockServletContext;
 import org.apache.wicket.util.tester.WicketTester;
@@ -30,7 +31,8 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.context.WebApplicationContext;
 
 /**
- * Resolves {@link WicketTester} parameters of test methods from the test's Spring application context.
+ * Resolves {@link WicketTester} and {@link WicketTestkit} parameters of test methods from the test's
+ * Spring application context.
  * <p>
  * For every test it creates a new instance of the context's {@link WebApplication} bean class through
  * Spring, so constructor dependencies are injected and the starter registers its
@@ -39,6 +41,11 @@ import org.springframework.web.context.WebApplicationContext;
  * application context, as the embedded container's does, so an application that registers the
  * injector itself in {@code init()} gets injection too. The tester is shared by the test's
  * {@code @BeforeEach}, {@code @Test} and {@code @AfterEach} methods and destroyed after the test.
+ * </p>
+ * <p>
+ * A {@code WicketTestkit} parameter wraps that same tester, so its locators search the page the
+ * tester rendered last. There is one per test as well, shared like the tester, so a form filled in
+ * across {@code @BeforeEach} and {@code @Test} keeps its values until the next request.
  * </p>
  * <p>
  * The {@code WebApplication} bean itself is never handed to a tester: Spring keeps test contexts
@@ -64,14 +71,17 @@ public class WicketTesterExtension implements ParameterResolver, AfterEachCallba
 
 	@Override
 	public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
-		return parameterContext.getParameter().getType() == WicketTester.class;
+		Class<?> type = parameterContext.getParameter().getType();
+		return type == WicketTester.class || type == WicketTestkit.class;
 	}
 
 	@Override
 	public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
+		Class<?> type = parameterContext.getParameter().getType();
 		if (extensionContext.getTestMethod().isEmpty()) {
-			throw new ParameterResolutionException("A WicketTester belongs to a single test: declare it on a "
-					+ "@Test, @BeforeEach or @AfterEach method, not on " + parameterContext.getDeclaringExecutable());
+			throw new ParameterResolutionException("A " + type.getSimpleName() + " belongs to a single test: "
+					+ "declare it on a @Test, @BeforeEach or @AfterEach method, not on "
+					+ parameterContext.getDeclaringExecutable());
 		}
 		Store store = extensionContext.getStore(NAMESPACE);
 		WicketTester tester = store.get(WicketTester.class, WicketTester.class);
@@ -79,12 +89,22 @@ public class WicketTesterExtension implements ParameterResolver, AfterEachCallba
 			tester = createTester(SpringExtension.getApplicationContext(extensionContext));
 			store.put(WicketTester.class, tester);
 		}
-		return tester;
+		if (type == WicketTester.class) {
+			return tester;
+		}
+		WicketTestkit kit = store.get(WicketTestkit.class, WicketTestkit.class);
+		if (kit == null) {
+			kit = WicketTestkit.of(tester);
+			store.put(WicketTestkit.class, kit);
+		}
+		return kit;
 	}
 
 	@Override
 	public void afterEach(ExtensionContext extensionContext) {
-		WicketTester tester = extensionContext.getStore(NAMESPACE).remove(WicketTester.class, WicketTester.class);
+		Store store = extensionContext.getStore(NAMESPACE);
+		store.remove(WicketTestkit.class, WicketTestkit.class);
+		WicketTester tester = store.remove(WicketTester.class, WicketTester.class);
 		if (tester != null) {
 			tester.destroy();
 		}

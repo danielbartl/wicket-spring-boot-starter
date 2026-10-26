@@ -17,8 +17,9 @@
 	<name>Wicket Spring Boot Starter - Test</name>
 	<description>
 		Test support for the Wicket Spring Boot Starter: WicketTester at the starter's Wicket version,
-		Spring Boot's test starter, and @WicketTest, which hands every test a WicketTester running a
-		fresh instance of the application's own Wicket application with Spring injection.
+		Spring Boot's test starter, wicket-testkit, and @WicketTest, which hands every test a
+		WicketTester running a fresh instance of the application's own Wicket application with Spring
+		injection, and a WicketTestkit for it.
 	</description>
 
 	<!-- Applications add this module in test scope, so everything below is compile scope here: Maven
@@ -38,6 +39,12 @@
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-tester</artifactId>
+		</dependency>
+		<!-- Finds components by type, wicket:id, label and row instead of by path; @WicketTest hands
+		     out a WicketTestkit for each test's tester -->
+		<dependency>
+			<groupId>dev.jbaby</groupId>
+			<artifactId>wicket-testkit</artifactId>
 		</dependency>
 	</dependencies>
 </project>

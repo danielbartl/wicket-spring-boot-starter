@@ -51,6 +51,7 @@
 
 		<spring-boot.version>4.1.1</spring-boot.version>
 		<wicket.version>10.11.0</wicket.version>
+		<wicket-testkit.version>0.2.0</wicket-testkit.version>
 
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
@@ -98,6 +99,13 @@
 				<groupId>org.apache.wicket</groupId>
 				<artifactId>wicket-tester</artifactId>
 				<version>${wicket.version}</version>
+			</dependency>
+
+			<!-- Brings no Wicket of its own: it uses the wicket-core and wicket-tester above -->
+			<dependency>
+				<groupId>dev.jbaby</groupId>
+				<artifactId>wicket-testkit</artifactId>
+				<version>${wicket-testkit.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

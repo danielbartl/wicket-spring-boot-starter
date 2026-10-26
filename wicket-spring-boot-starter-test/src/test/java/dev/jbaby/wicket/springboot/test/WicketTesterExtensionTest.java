@@ -13,10 +13,14 @@
  */
 package dev.jbaby.wicket.springboot.test;
 
+import dev.jbaby.wicket.testkit.WicketTestkit;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import static dev.jbaby.wicket.testkit.locator.Locator.locate;
 
 /**
  * The extension also works on a plain {@code @SpringBootTest}, without {@link WicketTest}.
@@ -32,5 +36,12 @@ class WicketTesterExtensionTest {
 		tester.startPage(GreetingPage.class);
 
 		tester.assertLabel("message", "Hello from Spring");
+	}
+
+	@Test
+	void resolvesATestkitOnAPlainSpringBootTest(WicketTester tester, WicketTestkit kit) {
+		tester.startPage(GreetingPage.class);
+
+		kit.assertLabel(locate(Label.class).withId("message"), "Hello from Spring");
 	}
 }
