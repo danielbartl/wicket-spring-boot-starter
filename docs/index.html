@@ -483,12 +483,12 @@
 <pre><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
   &lt;artifactId&gt;wicket-spring-boot-starter&lt;/artifactId&gt;
-  &lt;version&gt;0.2.0&lt;/version&gt;
+  &lt;version&gt;0.3.0&lt;/version&gt;
 &lt;/dependency&gt;</code></pre>
 				</div>
 				<div class="tab-panel" id="dep-gradle" role="tabpanel" aria-labelledby="tab-gradle" hidden>
 <pre><code data-lang="gradle">dependencies {
-  implementation 'dev.jbaby:wicket-spring-boot-starter:0.2.0'
+  implementation 'dev.jbaby:wicket-spring-boot-starter:0.3.0'
 }</code></pre>
 				</div>
 			</div>
@@ -782,13 +782,15 @@ wicket.filter-order=0</code></pre>
 						<h3>Test pages with WicketTester</h3>
 						<p>
 							Add <code>wicket-spring-boot-starter-test</code> in test scope, at the starter's
-							version. It brings <code>WicketTester</code> at the matching Wicket version and
-							Spring Boot's test starter.
+							version. It brings <code>WicketTester</code> at the matching Wicket version, Spring
+							Boot's test starter and <a href="https://danielbartl.github.io/wicket-testkit/">wicket-testkit</a>.
 						</p>
 						<p>
 							<code>@WicketTest</code> starts your application without a servlet container and hands every
 							test a tester running a new instance of your <code>WebApplication</code>, with
-							<code>@SpringBean</code> injection, destroyed when the test ends.
+							<code>@SpringBean</code> injection, destroyed when the test ends. Ask for a
+							<code>WicketTestkit</code> too, and find components by type, <code>wicket:id</code>, label
+							and row instead of by path.
 						</p>
 					</div>
 					<div class="codes">
@@ -806,13 +808,13 @@ wicket.filter-order=0</code></pre>
 <pre><code data-lang="xml">&lt;dependency&gt;
   &lt;groupId&gt;dev.jbaby&lt;/groupId&gt;
   &lt;artifactId&gt;wicket-spring-boot-starter-test&lt;/artifactId&gt;
-  &lt;version&gt;0.2.0&lt;/version&gt;
+  &lt;version&gt;0.3.0&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</code></pre>
 							</div>
 							<div class="tab-panel" id="test-dep-gradle" role="tabpanel" aria-labelledby="tab-test-gradle" hidden>
 <pre><code data-lang="gradle">dependencies {
-  testImplementation 'dev.jbaby:wicket-spring-boot-starter-test:0.2.0'
+  testImplementation 'dev.jbaby:wicket-spring-boot-starter-test:0.3.0'
 }</code></pre>
 							</div>
 						</div>
@@ -822,10 +824,11 @@ wicket.filter-order=0</code></pre>
 class HomePageTest {
 
     @Test
-    void greetsTheVisitor(WicketTester tester) {
+    void greetsTheVisitor(WicketTester tester, WicketTestkit kit) {
         tester.startPage(HomePage.class);
 
-        tester.assertLabel("message", "Hello from Spring, Wicket!");
+        kit.assertLabel(locate(Label.class).withId("message"),
+            "Hello from Spring, Wicket!");
     }
 }</code></pre>
 						</div>
@@ -997,14 +1000,14 @@ server.tomcat.basedir=target/tomcat</code></pre>
 				<p>Each release pins a Wicket version and the Spring Boot lines it has been tested with, by an integration test shaped like a freshly generated Spring Boot project.</p>
 			</div>
 			<div class="compat">
-				<div class="card"><div class="label">Starter</div><div class="value">0.2.x</div></div>
+				<div class="card"><div class="label">Starter</div><div class="value">0.3.x</div></div>
 				<div class="card"><div class="label">Apache Wicket</div><div class="value">10.11</div></div>
 				<div class="card"><div class="label">Spring Boot</div><div class="value">4.0 &amp; 4.1</div></div>
 				<div class="card"><div class="label">Java</div><div class="value">17 to 25</div></div>
 			</div>
 			<p class="note">
 				Java 26 and later need Wicket 10.12, which fixes how Wicket creates its <code>@SpringBean</code>
-				proxies there. The next starter release will move to it.
+				proxies there. A later starter release will move to it once it is out.
 			</p>
 		</div>
 	</section>
