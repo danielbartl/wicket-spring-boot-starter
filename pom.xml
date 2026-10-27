@@ -49,7 +49,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.release>17</maven.compiler.release>
 
-		<spring-boot.version>4.1.1</spring-boot.version>
+		<spring-boot.version>4.1.2</spring-boot.version>
 		<wicket.version>10.11.0</wicket.version>
 		<wicket-testkit.version>0.2.0</wicket-testkit.version>
 
