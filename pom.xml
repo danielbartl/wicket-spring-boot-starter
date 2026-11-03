@@ -50,7 +50,7 @@
 		<maven.compiler.release>17</maven.compiler.release>
 
 		<spring-boot.version>4.1.1</spring-boot.version>
-		<wicket.version>10.11.0</wicket.version>
+		<wicket.version>10.12.0</wicket.version>
 		<wicket-testkit.version>0.2.0</wicket-testkit.version>
 
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
