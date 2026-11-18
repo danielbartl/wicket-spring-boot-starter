@@ -47,10 +47,10 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<maven.compiler.release>17</maven.compiler.release>
+		<maven.compiler.release>21</maven.compiler.release>
 
 		<spring-boot.version>4.1.1</spring-boot.version>
-		<wicket.version>10.11.0</wicket.version>
+		<wicket.version>11.0.0</wicket.version>
 
 		<maven-clean-plugin.version>3.5.0</maven-clean-plugin.version>
 		<maven-compiler-plugin.version>3.16.0</maven-compiler-plugin.version>
