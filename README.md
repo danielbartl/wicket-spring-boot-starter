@@ -54,7 +54,7 @@ builds on this one and adds Wicket Oat, Spring Modulith and MongoDB, at versions
 - **IDE Auto-Completion Support**: Ships with built-in configuration metadata, enabling auto-completion and documentation tooltips for Wicket properties in popular IDEs (IntelliJ, Eclipse, VS Code).
 - **Spring MVC Coexistence**: Requests Wicket does not handle fall through to Spring MVC, so `@RestController` endpoints work next to Wicket pages.
 - **DevTools Support**: Works with `spring-boot-devtools` out of the box: automatic restarts, the back button and restored pages keep working with `@SpringBean` fields.
-- **Test Starter**: `wicket-spring-boot-starter-test` brings `WicketTester` at the matching Wicket version, and `@WicketTest` hands each test a tester running your application with `@SpringBean` injection. From 0.3.0 on it also hands out a [wicket-testkit](https://github.com/danielbartl/wicket-testkit) `WicketTestkit`, which finds components by what they are instead of by path.
+- **Test Starter**: `wicket-spring-boot-starter-test` brings `WicketTester` at the matching Wicket version, and `@WicketTest` hands each test a tester running your application with `@SpringBean` injection.
 
 ---
 
@@ -149,8 +149,8 @@ for the latest released version):
 
 For tests, add the test starter next to it, in test scope and at the same version as the starter
 (it exists from 0.2.0 on). It brings Wicket's `WicketTester` at the same Wicket version, Spring
-Boot's test starter, and [`@WicketTest`](#testing-pages-with-wickettester). From 0.3.0 on, it also
-brings [wicket-testkit](https://github.com/danielbartl/wicket-testkit), see
+Boot's test starter, and [`@WicketTest`](#testing-pages-with-wickettester). Version 0.3.x also
+brought wicket-testkit; from 0.4.0 on you add it yourself, see
 [Finding components by what they are](#finding-components-by-what-they-are):
 
 ```xml
@@ -413,35 +413,32 @@ destroyed when the test ends. Use `@WicketTest` instead of `@SpringBootTest`; it
 
 ### Finding components by what they are
 
-From 0.3.0 on, the test starter brings [wicket-testkit](https://github.com/danielbartl/wicket-testkit),
-and `@WicketTest` also resolves `WicketTestkit` parameters. A testkit wraps the test's own tester
-and finds components by type, `wicket:id`, label and the row of a list, instead of by paths such as
-`"orders:1:status"`. A path spells out the whole component tree, so it breaks as soon as a container
-is wrapped around the list, and checks the wrong row once the rows are sorted:
+[wicket-testkit](https://github.com/danielbartl/wicket-testkit) finds components by type,
+`wicket:id`, label and the row of a list, instead of by paths such as `"orders:1:status"`. The test
+starter 0.3.x brought it and resolved `WicketTestkit` parameters; from 0.4.0 on, add it yourself in
+test scope and wrap the tester:
+
+```xml
+<dependency>
+    <groupId>dev.jbaby</groupId>
+    <artifactId>wicket-testkit</artifactId>
+    <version>0.2.0</version>
+    <scope>test</scope>
+</dependency>
+```
 
 ```java
-import static dev.jbaby.wicket.testkit.locator.Locator.locate;
+@Test
+void shipsAnOrder(WicketTester tester) {
+    WicketTestkit kit = WicketTestkit.of(tester);
+    Order order = orders.place("ACME");
+    tester.startPage(OrdersPage.class);
 
-@WicketTest
-class OrdersPageTest {
-
-    @Autowired
-    OrderService orders;
-
-    @Test
-    void shipsAnOrder(WicketTester tester, WicketTestkit kit) {
-        Order order = orders.place("ACME");
-        tester.startPage(OrdersPage.class);
-
-        kit.click(locate(AjaxLink.class).withId("ship").inRowOf(order));
-
-        kit.assertLabel(locate(Label.class).withId("status").inRowOf(order), "shipped");
-    }
+    kit.click(locate(AjaxLink.class).withId("ship").inRowOf(order));
 }
 ```
 
-Like the tester, there is one testkit per test, shared by its `@BeforeEach`, `@Test` and
-`@AfterEach` methods. The [wicket-testkit guide](https://danielbartl.github.io/wicket-testkit/guide.html)
+The [wicket-testkit guide](https://danielbartl.github.io/wicket-testkit/guide.html)
 covers forms, example tables and failure messages.
 
 ### Tests that start a servlet container
